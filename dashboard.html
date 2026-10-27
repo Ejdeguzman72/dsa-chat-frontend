@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#090b18">
+    <title>Chatroom · DSA Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar" aria-label="Main navigation"><a class="brand" href="dashboard.html"><span
+                    class="logo">▤</span><span>DSA<span class="accent">Chat</span></span></a>
+            <div class="workspace">
+                <div class="workspace-icon">D</div>
+                <div><strong>DSA Community</strong><small>Community workspace</small></div><span
+                    class="chevron">⌄</span>
+            </div>
+            <div class="section-label">WORKSPACE</div>
+            <nav><a class="nav-link active" href="dashboard.html"><span>▦</span> Overview</a><a class="nav-link"
+                    href="#chat"><span>◉</span> General chat <span class="active-dot"></span></a><button
+                    class="nav-link dropdown-trigger" id="events-toggle" type="button" aria-expanded="false"
+                    aria-controls="events-menu"><span>▣</span> Events <span class="chevron">⌄</span></button>
+                <div id="events-menu" class="events-menu" hidden><a href="#events-panel">Upcoming events</a><a
+                        href="#events-panel">Community calendar</a><a href="#events-panel">Past events</a></div>
+            </nav>
+            <div class="section-label section-spaced">COMING SOON</div>
+            <div class="nav-link disabled"><span>♧</span> Direct messages <span class="soon">Soon</span></div>
+            <div class="nav-link disabled"><span>⚙</span> Settings <span class="soon">Soon</span></div>
+            <div class="sidebar-bottom">
+                <div class="online"><span class="green-dot"></span> Community online</div>
+                <div class="profile"><span class="avatar me">ME</span>
+                    <div><strong>Demo User</strong><small>Member</small></div><span class="profile-dots">•••</span>
+                </div><a class="sign-out" href="index.html">← Back to login</a>
+            </div>
+        </aside>
+        <div class="main-shell">
+            <header class="topbar">
+                <div class="crumb">Workspace <span>/</span> <strong>Overview</strong></div>
+                <div class="top-actions"><span class="live-pill"><span class="green-dot"></span> Live
+                        community</span><span class="avatar mini">ME</span></div>
+            </header>
+            <main class="content">
+                <div class="welcome">
+                    <div>
+                        <div class="eyebrow">YOUR COMMUNITY SPACE</div>
+                        <h1>Welcome back <span class="wave">✦</span></h1>
+                        <p>Catch up with the conversation and see what's happening next.</p>
+                    </div>
+                    <div class="date-pill" id="today"></div>
+                </div>
+                <div class="content-grid">
+                    <section class="chat-card" id="chat" aria-label="Community chat">
+                        <div class="card-header">
+                            <div class="channel-icon">#</div>
+                            <div>
+                                <h2>general</h2>
+                                <p>The place for everyone to connect</p>
+                            </div>
+                            <div class="channel-tag"><span class="green-dot"></span> Live</div>
+                        </div>
+                        <div class="chat-scroll" id="messages" aria-live="polite">
+                            <div class="day-divider"><span>Today</span></div>
+                            <div class="message"><span class="avatar purple">JD</span>
+                                <div>
+                                    <div class="msg-meta"><strong>Jordan</strong><time>10:42 AM</time></div>
+                                    <p>Hey everyone! What are you working on today? 👋</p>
+                                </div>
+                            </div>
+                            <div class="message"><span class="avatar blue">SK</span>
+                                <div>
+                                    <div class="msg-meta"><strong>Sam</strong><time>10:44 AM</time></div>
+                                    <p>Just getting started on a new project. Excited to share updates!</p>
+                                </div>
+                            </div>
+                            <div class="message"><span class="avatar ai">✦</span>
+                                <div>
+                                    <div class="msg-meta"><strong>DSA AI</strong><span
+                                            class="bot-tag">BOT</span><time>10:45 AM</time></div>
+                                    <p>Welcome! Mention <code>@AI</code> in the chat whenever you want help
+                                        brainstorming or solving a problem.</p>
+                                </div>
+                            </div>
+                            <div class="message"><span class="avatar violet">AL</span>
+                                <div>
+                                    <div class="msg-meta"><strong>Alex</strong><time>10:48 AM</time></div>
+                                    <p>Love the new community space. Looks great! 🚀</p>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="composer" id="message-form"><label class="sr-only" for="message-input">Your
+                                message</label><input id="message-input" maxlength="2000" autocomplete="off"
+                                placeholder="Message #general or ask @AI..." required><button type="submit"
+                                aria-label="Send message" title="Send message">➤</button></form>
+                        <div class="chat-footer"><span><span class="green-dot"></span> Chat preview · messages stay in
+                                this browser tab</span><span>Enter to send</span></div>
+                    </section>
+                    <aside class="right-rail">
+                        <section class="info-card" id="events-panel">
+                            <div class="rail-heading"><span class="rail-icon">▣</span>
+                                <div>
+                                    <h2>Upcoming events</h2>
+                                    <p>What's on the horizon</p>
+                                </div>
+                            </div>
+                            <div class="event">
+                                <div class="event-date"><strong>28</strong><span>OCT</span></div>
+                                <div><strong>Community hangout</strong>
+                                    <p>Meet &amp; chat · 6:00 PM</p>
+                                </div>
+                            </div>
+                            <div class="event">
+                                <div class="event-date purple-date"><strong>05</strong><span>NOV</span></div>
+                                <div><strong>Build &amp; share</strong>
+                                    <p>Project showcase · 7:00 PM</p>
+                                </div>
+                            </div>
+                            <div class="event">
+                                <div class="event-date blue-date"><strong>12</strong><span>NOV</span></div>
+                                <div><strong>AI workshop</strong>
+                                    <p>Learning session · 5:30 PM</p>
+                                </div>
+                            </div>
+                            <p class="event-disclaimer">Sample events for the UI preview.</p><button class="view-events"
+                                type="button" id="view-events">View all events <span>→</span></button>
+                        </section>
+                        <section class="info-card ai-card">
+                            <div class="sparkle">✦</div>
+                            <div class="ai-eyebrow">YOUR AI ASSISTANT</div>
+                            <h2>Need a little help?</h2>
+                            <p>Ask DSA AI a question right inside the chatroom.</p><button type="button" id="ask-ai">Try
+                                @AI <span>↗</span></button>
+                        </section>
+                        <div class="help-note">✧ &nbsp; More community features coming soon.</div>
+                    </aside>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

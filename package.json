@@ -1,0 +1,21 @@
+{
+  "name": "dsa-chat-frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "http-server . -p 5500 -c-1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "axios": "^1.20.0"
+  }
+}
