@@ -54,17 +54,13 @@ class LoginPage {
         document.querySelector("#forgot-password-link")
             ?.addEventListener("click", (event) => {
                 event.preventDefault();
-                this.showError(
-                    "Password recovery is not available yet."
-                );
+                window.location.assign("./forgot-password.html")
             });
 
         document.querySelector("#create-account-link")
             ?.addEventListener("click", (event) => {
                 event.preventDefault();
-                this.showError(
-                    "Account registration is not available yet."
-                );
+                window.location.assign("./register.html");
             });
     }
 
