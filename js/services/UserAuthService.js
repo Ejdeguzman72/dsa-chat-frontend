@@ -1,16 +1,7 @@
-
 import { AuthenticationError } from "../models/AuthenticationError.js";
-import type { LoginRequest } from "../models/LoginRequest.js";
-import type { LoginResponse } from "../models/LoginResponse.js";
-import type { AxiosStatic, AxiosInstance, AxiosResponse } from "axios";
-
-declare const axios: AxiosStatic;
-
-export class AuthService {
-
-    private readonly api: AxiosInstance;
-    private readonly tokenKey = "dsa_chat_access_token";
-
+export class UserAuthService {
+    api;
+    tokenKey = "dsa_chat_access_token";
     constructor() {
         this.api = axios.create({
             baseURL: "http://localhost:8080",
@@ -20,114 +11,72 @@ export class AuthService {
                 "Accept": "application/json"
             }
         });
-
         this.api.interceptors.request.use((config) => {
             const token = this.getAccessToken();
-
             if (token) {
                 config.headers.set("Authorization", `Bearer ${token}`);
             }
-
             return config;
         });
     }
-
-    public async login(
-        credentials: LoginRequest
-    ): Promise<LoginResponse> {
-
+    async register(credentials) {
+        const response = await this.api.post("/auth/register", credentials);
+        return response.data;
+    }
+    async login(credentials) {
         try {
-            const response: AxiosResponse<LoginResponse> =
-                await this.api.post<LoginResponse>(
-                    "/auth/authenticate",
-                    credentials
-                );
-
+            const response = await this.api.post("/auth/authenticate", credentials);
             const data = response.data;
-            console.log("this is data");
-            console.log(data);
-
-
             const token = data.token;
-            console.log('token - ' + token);
-
             if (typeof token !== "string" || !token.trim()) {
-                throw new AuthenticationError(
-                    "Authentication token was not returned.",
-                    response.status
-                );
+                throw new AuthenticationError("Authentication token was not returned.", response.status);
             }
-
             this.setAccessToken(token);
-
             return data;
-
-        } catch (error: unknown) {
+        }
+        catch (error) {
             if (error instanceof AuthenticationError) {
                 throw error;
             }
-
             if (axios.isAxiosError(error)) {
-                throw new AuthenticationError(
-                    this.getErrorMessage(error.response?.status ?? 0),
-                    error.response?.status ?? 0
-                );
+                throw new AuthenticationError(this.getErrorMessage(error.response?.status ?? 0), error.response?.status ?? 0);
             }
-
             throw error;
         }
     }
-
-    public getAccessToken(): string | null {
+    getAccessToken() {
         return sessionStorage.getItem(this.tokenKey);
     }
-
-    private setAccessToken(token: string): void {
+    setAccessToken(token) {
         sessionStorage.setItem(this.tokenKey, token);
     }
-
-    public isAuthenticated(): boolean {
+    isAuthenticated() {
         return Boolean(this.getAccessToken());
     }
-
-    public logout(): void {
+    logout() {
         sessionStorage.removeItem(this.tokenKey);
     }
-
-    public async authenticatedRequest<T>(
-        method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-        endpoint: string,
-        data?: unknown
-    ): Promise<T> {
-
+    async authenticatedRequest(method, endpoint, data) {
         try {
-            const response = await this.api.request<T>({
+            const response = await this.api.request({
                 method,
                 url: endpoint,
                 data
             });
-
             return response.data;
-
-        } catch (error: unknown) {
+        }
+        catch (error) {
             if (axios.isAxiosError(error)) {
                 const status = error.response?.status ?? 0;
-
                 if (status === 401) {
                     this.logout();
                 }
-
-                throw new AuthenticationError(
-                    this.getErrorMessage(status),
-                    status
-                );
+                throw new AuthenticationError(this.getErrorMessage(status), status);
             }
-
             throw error;
         }
     }
-
-    private getErrorMessage(status: number): string {
+    getErrorMessage(status) {
         switch (status) {
             case 0:
                 return "Unable to connect to the server.";

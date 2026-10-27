@@ -1,10 +1,10 @@
 
-import { AuthService } from '../services/AuthService.js'
+import { UserAuthService } from '../services/UserAuthService.js'
 import { AuthenticationError } from '../models/AuthenticationError.js'
 
 class LoginPage {
 
-    private readonly authService: AuthService;
+    private readonly authService: UserAuthService;
 
     private readonly loginForm: HTMLFormElement;
     private readonly usernameInput: HTMLInputElement;
@@ -14,7 +14,7 @@ class LoginPage {
 
     constructor() {
 
-        this.authService = new AuthService();
+        this.authService = new UserAuthService();
 
         this.loginForm = this.getElement<HTMLFormElement>(
             "#login-form"
