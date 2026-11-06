@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Events | DSA Chat</title>
+  <link rel="stylesheet" href="./styles/events.css" />
+</head>
+<body>
+  <div class="glow glow-a"></div><div class="glow glow-b"></div>
+  <header class="topbar">
+    <a class="brand" href="./dashboard.html"><span class="brand-icon">&lt;/&gt;</span><span>DSA<span class="brand-accent">Chat</span></span></a>
+    <nav aria-label="Main navigation"><a href="./dashboard.html">Dashboard</a><a class="active" href="./events.html" aria-current="page">Events</a><a href="./index.html">Login</a></nav>
+  </header>
+  <main class="container">
+    <div class="eyebrow"><span class="dot"></span> COMMUNITY EVENTS</div>
+    <section class="hero">
+      <div><h1>Build skills.<br><span>Find your people.</span></h1><p>Join coding challenges, interview prep sessions, and live problem-solving events with the DSA Chat community.</p><a class="primary-link" href="#event-list">Explore events <span aria-hidden="true">↗</span></a></div>
+      <div class="hero-art" aria-hidden="true"><div class="terminal-top"><span></span><span></span><span></span><small>community.ts</small></div><pre><i>const</i> nextLevel = <b>async</b> () =&gt; {
+  <em>await</em> learnTogether();
+  <em>await</em> solveProblems();
+  <strong>return</strong> "level up";
+};</pre><div class="art-footer">● Ready to collaborate</div></div>
+    </section>
+    <section class="stats" aria-label="Community highlights"><div><strong>Weekly</strong><span>Practice sessions</span></div><div><strong>Live</strong><span>Problem solving</span></div><div><strong>All levels</strong><span>Everyone is welcome</span></div></section>
+    <section id="event-list" class="events-section"><div class="section-header"><div><div class="eyebrow">WHAT'S HAPPENING</div><h2>Upcoming events</h2><p>Find a session that fits your goals.</p></div><div class="count" id="event-count" aria-live="polite"></div></div>
+      <div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="event-search" type="search" placeholder="Search events..." aria-label="Search events" /></label><div class="filters" role="group" aria-label="Filter events"><button type="button" class="filter active" data-filter="all" aria-pressed="true">All events</button><button type="button" class="filter" data-filter="challenge" aria-pressed="false">Challenges</button><button type="button" class="filter" data-filter="workshop" aria-pressed="false">Workshops</button><button type="button" class="filter" data-filter="study" aria-pressed="false">Study groups</button></div></div>
+      <div id="events-grid" class="events-grid" aria-live="polite"></div><p id="empty-state" class="empty" hidden>No events match your search. Try another keyword or category.</p>
+    </section>
+    <section class="bottom-cta"><div><span class="eyebrow">GROW TOGETHER</span><h2>Every great developer starts somewhere.</h2><p>Keep showing up. Keep solving. Keep improving.</p></div><a href="./register.html">Join DSA Chat <span aria-hidden="true">→</span></a></section>
+  </main>
+  <footer>© DSA Chat · Learn. Build. Connect.</footer>
+  <script type="module" src="./js/pages/events.js"></script>
+</body>
+</html>
