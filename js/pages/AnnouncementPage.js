@@ -1,6 +1,8 @@
 import { AnnouncementService } from "../services/AnnouncementService.js";
+import { AnnouncementModal } from "../modals/AnnouncementModal.js";
+import { UpdateAnnouncementModal } from "../modals/UpdateAnnouncementModal.js";
 export class AnnouncementPage {
-    service = new AnnouncementService();
+    announcementService = new AnnouncementService();
     container = document.querySelector("#content-list");
     count = document.querySelector("#result-count");
     refreshButton = document.querySelector("#refresh");
@@ -8,11 +10,22 @@ export class AnnouncementPage {
     previousButton = document.querySelector("#previous-page");
     nextButton = document.querySelector("#next-page");
     pageInfo = document.querySelector("#page-info");
+    deleteModal = document.querySelector("#delete-announcement-modal");
+    confirmDeleteButton = document.querySelector("#confirm-delete");
+    cancelDeleteButton = document.querySelector("#cancel-delete");
+    closeDeleteButton = document.querySelector("#close-delete-modal");
+    deleteError = document.querySelector("#delete-announcement-error");
+    announcementModal;
+    updateAnnouncementModal;
     pageSize = 5;
     currentPage = 1;
     announcements = [];
+    selectedAnnouncementId = null;
+    isDeleting = false;
     constructor() {
         this.initializeEvents();
+        this.announcementModal = new AnnouncementModal(() => this.loadAnnouncements());
+        this.updateAnnouncementModal = new UpdateAnnouncementModal(() => this.loadAnnouncements());
         void this.loadAnnouncements();
     }
     initializeEvents() {
@@ -31,6 +44,26 @@ export class AnnouncementPage {
                 this.renderPage();
             }
         });
+        this.confirmDeleteButton?.addEventListener("click", () => {
+            void this.deleteAnnouncement();
+        });
+        this.cancelDeleteButton?.addEventListener("click", () => {
+            this.closeDeleteModal();
+        });
+        this.closeDeleteButton?.addEventListener("click", () => {
+            this.closeDeleteModal();
+        });
+        this.deleteModal?.addEventListener("click", event => {
+            if (event.target === this.deleteModal) {
+                this.closeDeleteModal();
+            }
+        });
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && this.deleteModal &&
+                !this.deleteModal.hidden) {
+                this.closeDeleteModal();
+            }
+        });
     }
     get totalPages() {
         return Math.max(1, Math.ceil(this.announcements.length / this.pageSize));
@@ -47,7 +80,7 @@ export class AnnouncementPage {
         }
         this.showStatus("Loading announcements…");
         try {
-            const announcements = await this.service.getAllAnnouncements();
+            const announcements = await this.announcementService.getAllAnnouncements();
             this.announcements = [...announcements].sort((a, b) => this.getDateValue(b.sentDatetime) -
                 this.getDateValue(a.sentDatetime));
             this.currentPage = 1;
@@ -95,8 +128,7 @@ export class AnnouncementPage {
                 `Page ${this.currentPage} of ${this.totalPages}`;
         }
         if (this.previousButton) {
-            this.previousButton.disabled =
-                this.currentPage === 1;
+            this.previousButton.disabled = this.currentPage === 1;
         }
         if (this.nextButton) {
             this.nextButton.disabled =
@@ -115,9 +147,9 @@ export class AnnouncementPage {
         card.className = "item";
         const header = document.createElement("div");
         header.className = "meta";
-        const label = document.createElement("span");
+        const label = document.createElement("h2");
         label.className = "tag";
-        label.textContent = "Community announcement";
+        label.textContent = announcement.title ?? "Untitled announcement";
         const date = document.createElement("time");
         if (announcement.sentDatetime) {
             const parsedDate = new Date(announcement.sentDatetime);
@@ -133,9 +165,29 @@ export class AnnouncementPage {
             date.textContent = "Date unavailable";
         }
         const content = document.createElement("p");
+        content.className = "announcement-content";
         content.textContent = announcement.content ?? "";
+        const actions = document.createElement("div");
+        actions.className = "announcement-actions";
+        const updateButton = document.createElement("button");
+        updateButton.type = "button";
+        updateButton.className = "announcement-update-btn";
+        updateButton.textContent = "Update";
+        updateButton.setAttribute("aria-label", `Update ${announcement.title}`);
+        updateButton.addEventListener("click", () => {
+            this.updateAnnouncementModal.open(announcement);
+        });
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "announcement-delete-btn";
+        deleteButton.textContent = "Delete";
+        deleteButton.setAttribute("aria-label", `Delete ${announcement.title}`);
+        deleteButton.addEventListener("click", () => {
+            this.openDeleteModal(announcement.announcementId);
+        });
+        actions.append(updateButton, deleteButton);
         header.append(label, date);
-        card.append(header, content);
+        card.append(header, content, actions);
         return card;
     }
     showStatus(message) {
@@ -145,6 +197,61 @@ export class AnnouncementPage {
         element.className = "status";
         element.textContent = message;
         this.container.replaceChildren(element);
+    }
+    openDeleteModal(announcementId) {
+        this.selectedAnnouncementId = announcementId;
+        if (this.deleteError) {
+            this.deleteError.hidden = true;
+            this.deleteError.textContent = "";
+        }
+        if (this.deleteModal) {
+            this.deleteModal.hidden = false;
+        }
+        this.confirmDeleteButton?.focus();
+    }
+    closeDeleteModal() {
+        if (this.isDeleting)
+            return;
+        if (this.deleteModal) {
+            this.deleteModal.hidden = true;
+        }
+        this.selectedAnnouncementId = null;
+    }
+    async deleteAnnouncement() {
+        if (this.selectedAnnouncementId === null || this.isDeleting) {
+            return;
+        }
+        this.isDeleting = true;
+        if (this.confirmDeleteButton) {
+            this.confirmDeleteButton.disabled = true;
+            this.confirmDeleteButton.textContent = "Deleting...";
+        }
+        try {
+            await this.announcementService.deleteAnnouncement(this.selectedAnnouncementId);
+            this.selectedAnnouncementId = null;
+            if (this.deleteModal) {
+                this.deleteModal.hidden = true;
+            }
+            await this.loadAnnouncements();
+        }
+        catch (error) {
+            console.error("Failed to delete announcement:", error);
+            if (this.deleteError) {
+                this.deleteError.textContent =
+                    error instanceof Error
+                        ? error.message
+                        : "Unable to delete announcement.";
+                this.deleteError.hidden = false;
+            }
+        }
+        finally {
+            this.isDeleting = false;
+            if (this.confirmDeleteButton) {
+                this.confirmDeleteButton.disabled = false;
+                this.confirmDeleteButton.textContent =
+                    "Delete Announcement";
+            }
+        }
     }
 }
 document.addEventListener("DOMContentLoaded", () => {

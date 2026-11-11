@@ -10,25 +10,15 @@ import type {
 export class EventPage {
 
     private readonly service = new EventService();
-
     private readonly container = document.querySelector<HTMLElement>("#content-list");
-
     private readonly count = document.querySelector<HTMLElement>("#result-count");
-
     private readonly refreshButton = document.querySelector<HTMLButtonElement>("#refresh");
-
     private readonly pagination = document.querySelector<HTMLElement>("#events-pagination");
-
     private readonly previousButton = document.querySelector<HTMLButtonElement>("#prev-events");
-
     private readonly nextButton = document.querySelector<HTMLButtonElement>("#next-events");
-
     private readonly pageInfo = document.querySelector<HTMLElement>("#events-page-info");
-
     private readonly pageSize = 4;
-
     private currentPage = 1;
-
     private upcomingEvents: Event[] = [];
 
     constructor() {
