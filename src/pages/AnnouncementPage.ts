@@ -9,83 +9,190 @@ export class AnnouncementPage {
     private readonly service = new AnnouncementService();
 
     private readonly container =
-        document.querySelector<HTMLElement>(
-            "#announcements-list"
-        );
+        document.querySelector<HTMLElement>("#content-list");
+
+    private readonly count =
+        document.querySelector<HTMLElement>("#result-count");
+
+    private readonly refreshButton =
+        document.querySelector<HTMLButtonElement>("#refresh");
+
+    private readonly pagination =
+        document.querySelector<HTMLElement>("#pagination");
+
+    private readonly previousButton =
+        document.querySelector<HTMLButtonElement>("#previous-page");
+
+    private readonly nextButton =
+        document.querySelector<HTMLButtonElement>("#next-page");
+
+    private readonly pageInfo =
+        document.querySelector<HTMLElement>("#page-info");
+
+    private readonly pageSize = 5;
+
+    private currentPage = 1;
+
+    private announcements: Announcement[] = [];
 
     constructor() {
-        document
-            .querySelector("#refresh-announcements")
-            ?.addEventListener("click", () => {
-                void this.loadAnnouncements();
-            });
-
+        this.initializeEvents();
         void this.loadAnnouncements();
     }
 
+    private initializeEvents(): void {
+
+        this.refreshButton?.addEventListener("click", () => {
+            void this.loadAnnouncements();
+        });
+
+        this.previousButton?.addEventListener("click", () => {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.renderPage();
+            }
+        });
+
+        this.nextButton?.addEventListener("click", () => {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+                this.renderPage();
+            }
+        });
+    }
+
+    private get totalPages(): number {
+        return Math.max(
+            1,
+            Math.ceil(this.announcements.length / this.pageSize)
+        );
+    }
+
     private async loadAnnouncements(): Promise<void> {
-    if (!this.container) return;
 
-    this.container.replaceChildren();
+        if (!this.container) return;
 
-    const loading = document.createElement("p");
-    loading.className = "announcement-status";
-    loading.textContent = "Loading announcements...";
-    this.container.append(loading);
+        this.refreshButton?.setAttribute("disabled", "");
 
-    try {
-        const announcements =
-            await this.service.getAllAnnouncements();
+        if (this.count) {
+            this.count.textContent = "Loading…";
+        }
+
+        if (this.pagination) {
+            this.pagination.hidden = true;
+        }
+
+        this.showStatus("Loading announcements…");
+
+        try {
+            const announcements =
+                await this.service.getAllAnnouncements();
+
+            this.announcements = [...announcements].sort(
+                (a, b) =>
+                    this.getDateValue(b.sentDatetime) -
+                    this.getDateValue(a.sentDatetime)
+            );
+
+            this.currentPage = 1;
+
+            this.renderPage();
+
+        } catch (error) {
+            console.error("Failed to load announcements:", error);
+
+            this.announcements = [];
+
+            if (this.count) {
+                this.count.textContent =
+                    "Could not load announcements";
+            }
+
+            if (this.pagination) {
+                this.pagination.hidden = true;
+            }
+
+            this.showStatus("Unable to load announcements.");
+
+        } finally {
+            this.refreshButton?.removeAttribute("disabled");
+        }
+    }
+
+    private getDateValue(value?: string | null): number {
+        if (!value) return 0;
+
+        const timestamp = Date.parse(value);
+
+        return Number.isNaN(timestamp) ? 0 : timestamp;
+    }
+
+    private renderPage(): void {
+
+        if (!this.container) return;
+
+        const total = this.announcements.length;
+
+        const start =
+            (this.currentPage - 1) * this.pageSize;
+
+        const visibleAnnouncements =
+            this.announcements.slice(
+                start,
+                start + this.pageSize
+            );
 
         this.container.replaceChildren();
 
-        if (announcements.length === 0) {
-            const empty = document.createElement("p");
-            empty.className = "announcement-status";
-            empty.textContent = "No announcements available.";
-            this.container.append(empty);
+        if (this.count) {
+            this.count.textContent = total
+                ? `Showing ${start + 1}–${start + visibleAnnouncements.length} of ${total} announcements`
+                : "0 announcements";
+        }
+
+        if (this.pagination) {
+            this.pagination.hidden = this.totalPages <= 1;
+        }
+
+        if (this.pageInfo) {
+            this.pageInfo.textContent =
+                `Page ${this.currentPage} of ${this.totalPages}`;
+        }
+
+        if (this.previousButton) {
+            this.previousButton.disabled =
+                this.currentPage === 1;
+        }
+
+        if (this.nextButton) {
+            this.nextButton.disabled =
+                this.currentPage >= this.totalPages;
+        }
+
+        if (total === 0) {
+            this.showStatus("No announcements available.");
             return;
         }
 
-        // Sort announcements by newest first,
-        // then select only the first 5
-        const latestAnnouncements = announcements
-            .sort((a, b) =>
-                (Date.parse(b.sentDatetime ?? "") || 0) -
-                (Date.parse(a.sentDatetime ?? "") || 0)
-            )
-            .slice(0, 5);
-
-        // Display only those 5 announcements
-        latestAnnouncements.forEach(announcement => {
+        visibleAnnouncements.forEach(announcement => {
             this.container?.append(
                 this.createAnnouncement(announcement)
             );
         });
-
-    } catch (error) {
-        console.error("Failed to load announcements:", error);
-
-        this.container.replaceChildren();
-
-        const message = document.createElement("p");
-        message.className = "announcement-status";
-        message.textContent = "Unable to load announcements.";
-        this.container.append(message);
     }
-}
 
     private createAnnouncement(
         announcement: Announcement
     ): HTMLElement {
 
         const card = document.createElement("article");
-        card.className = "announcement-item";
+        card.className = "item";
 
         const header = document.createElement("div");
-        header.className = "announcement-meta";
+        header.className = "meta";
 
-        const label = document.createElement("strong");
+        const label = document.createElement("span");
+        label.className = "tag";
         label.textContent = "Community announcement";
 
         const date = document.createElement("time");
@@ -97,18 +204,32 @@ export class AnnouncementPage {
 
             if (!Number.isNaN(parsedDate.getTime())) {
                 date.dateTime = announcement.sentDatetime;
-                date.textContent =
-                    parsedDate.toLocaleString();
+                date.textContent = parsedDate.toLocaleString();
+            } else {
+                date.textContent = "Date unavailable";
             }
+        } else {
+            date.textContent = "Date unavailable";
         }
 
         const content = document.createElement("p");
-        content.textContent = announcement.content;
+        content.textContent = announcement.content ?? "";
 
         header.append(label, date);
         card.append(header, content);
 
         return card;
+    }
+
+    private showStatus(message: string): void {
+
+        if (!this.container) return;
+
+        const element = document.createElement("div");
+        element.className = "status";
+        element.textContent = message;
+
+        this.container.replaceChildren(element);
     }
 }
 

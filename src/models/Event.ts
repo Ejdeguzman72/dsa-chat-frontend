@@ -3,8 +3,4 @@ export interface Event {
     eventType: string;
     description: string;
     eventDate: string;
-    attendees: number[];
-    confirmedAttendees: number[];
-    tentativeAttendees:number[];
-    declinedAttendees: number[];
 }

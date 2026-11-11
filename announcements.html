@@ -1,142 +1,57 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Announcements · DSA Chat</title>
-  <style>
-:root{color-scheme:dark;--bg:#0b1120;--panel:#141e30;--panel2:#1c2940;--border:#2b3a54;--text:#edf2ff;--muted:#98a9c2;--accent:#a5b4fc}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 5%,#25204c 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}a{color:inherit;text-decoration:none}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}.sidebar{background:#0e1728;border-right:1px solid var(--border);padding:30px 18px}.brand{font-size:21px;font-weight:800;letter-spacing:.2px;padding:0 12px 32px}.brand span{color:var(--accent)}.nav{display:grid;gap:8px}.nav a{padding:11px 14px;border-radius:10px;color:var(--muted)}.nav a:hover,.nav a.active{background:#252c52;color:#e6e9ff}.main{max-width:1100px;width:100%;padding:42px clamp(20px,5vw,64px);margin:auto}.topline{font-size:12px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700}h1{font-size:clamp(28px,4vw,39px);line-height:1.2;margin:10px 0}h2{font-size:18px;margin:0}.intro{color:var(--muted);margin:0 0 28px}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}.toolbar p{margin:0;color:var(--muted)}button,.action{border:1px solid #6268a9;background:#312e81;color:#eef2ff;border-radius:9px;padding:10px 16px;font:inherit;cursor:pointer}button:hover,.action:hover{background:#4338ca}.list{display:grid;gap:15px}.item{border:1px solid var(--border);background:var(--panel);border-radius:16px;padding:23px}.item:hover{border-color:#6670b2}.meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-bottom:10px}.tag{color:#c4b5fd;font-weight:700}.item p{margin:8px 0 0;color:#d2dbea;white-space:pre-wrap;overflow-wrap:anywhere}.status{padding:40px 20px;text-align:center;border:1px dashed var(--border);border-radius:14px;color:var(--muted)}.event-row{display:flex;gap:18px;align-items:flex-start}.date-tile{width:65px;min-width:65px;background:#312e81;border:1px solid #5b57ad;border-radius:12px;padding:8px;text-align:center}.date-tile strong{display:block;font-size:24px;line-height:1.25}.date-tile span{font-size:12px;font-weight:700;letter-spacing:1px}.event-detail{min-width:0;flex:1}.event-detail .meta{margin:6px 0 0}.empty{color:var(--muted)}@media(max-width:720px){.layout{display:block}.sidebar{padding:14px 18px;border-right:0;border-bottom:1px solid var(--border)}.brand{padding:0 0 12px}.nav{display:flex;gap:4px;flex-wrap:wrap}.nav a{padding:7px 11px}.main{padding:28px 18px}}
-.pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:24px;flex-wrap:wrap}.pagination button:disabled{opacity:.4;cursor:not-allowed}.pagination span{color:var(--muted);font-size:14px}
-</style>
+  <link rel="stylesheet" href="styles/sidebar.css">
+  <link rel="stylesheet" href="styles/announcements.css">
 </head>
+
 <body>
   <div class="layout">
-    <aside class="sidebar">
-      <div class="brand">DSA <span>Chat</span></div>
-      <nav class="nav" aria-label="Main navigation">
-        <a href="./dashboard.html">⌂ &nbsp; Dashboard</a>
-        <a href="./announcements.html" class="active" aria-current="page">◉ &nbsp; Announcements</a>
-        <a href="./events.html" >▣ &nbsp; Events</a>
-      </nav>
+    <aside aria-label="Main navigation" class="sidebar"><a class="brand" href="dashboard.html"><span
+          class="logo">▤</span><span>DSA<span class="accent">Chat</span></span></a>
+      <div class="workspace">
+        <div class="workspace-icon">D</div>
+        <div><strong>DSA Community</strong><small>Community workspace</small></div><span class="chevron">⌄</span>
+      </div>
+      <div class="section-label">WORKSPACE</div>
+      <nav><a class="nav-link" href="dashboard.html"><span>▦</span> Overview</a><a aria-current="page"
+          class="nav-link active" href="announcements.html"><span>📢</span> Announcements</a><a class="nav-link"
+          href="events.html"><span>📅</span> Events</a><a class="nav-link" href="chat.html"><span>💬</span> General
+          chat</a></nav>
+      <div class="section-label section-spaced">COMING SOON</div>
+      <div class="nav-link disabled"><span>♧</span> Direct messages <span class="soon">Soon</span></div>
+      <div class="nav-link disabled"><span>⚙</span> Settings <span class="soon">Soon</span></div>
+      <div class="sidebar-bottom">
+        <div class="online"><span class="green-dot"></span> Community online</div>
+        <div class="profile"><span class="avatar me">ME</span>
+          <div><strong>Demo User</strong><small>Member</small></div><span class="profile-dots">•••</span>
+        </div><a class="sign-out" href="index.html">← Back to login</a>
+      </div>
     </aside>
     <main class="main">
       <div class="topline">DSA Community</div>
       <h1>Announcements</h1>
       <p class="intro">Community news, updates, and important notices.</p>
-      <div class="toolbar"><p id="result-count" aria-live="polite">Loading…</p><button id="refresh" type="button">Refresh</button></div>
-      <div class="list" id="content-list" aria-live="polite"><div class="status">Loading announcements…</div></div>
-      <nav class="pagination" id="pagination" aria-label="Announcement pages" hidden>
+      <div class="toolbar">
+        <p aria-live="polite" id="result-count">Loading…</p><button id="refresh" type="button">Refresh</button>
+      </div>
+      <div aria-live="polite" class="list" id="content-list">
+        <div class="status">Loading announcements…</div>
+      </div>
+      <nav aria-label="Announcement pages" class="pagination" hidden="" id="pagination">
         <button id="previous-page" type="button">Previous</button>
-        <span id="page-info" aria-live="polite"></span>
+        <span aria-live="polite" id="page-info"></span>
         <button id="next-page" type="button">Next</button>
       </nav>
     </main>
   </div>
-  <script type="module">
-    // Change this URL if your Spring Boot API uses a different endpoint.
-    const API_URL = "http://localhost:8080/announcements/all";
-    const TOKEN_KEY = "dsa_chat_access_token";
-    const list = document.querySelector("#content-list");
-    const count = document.querySelector("#result-count");
-    const refresh = document.querySelector("#refresh");
-    const pagination = document.querySelector("#pagination");
-    const previousPage = document.querySelector("#previous-page");
-    const nextPage = document.querySelector("#next-page");
-    const pageInfo = document.querySelector("#page-info");
-    const PAGE_SIZE = 5;
-    let currentPage = 1;
-    let orderedAnnouncements = [];
-
-    function status(message) {
-      const el = document.createElement("div");
-      el.className = "status";
-      el.textContent = message;
-      list.replaceChildren(el);
-    }
-    function validDate(value) {
-      if (!value) return null;
-      const date = new Date(value);
-      return Number.isNaN(date.getTime()) ? null : date;
-    }
-    function text(tag, value, className) {
-      const el = document.createElement(tag);
-      if (className) el.className = className;
-      el.textContent = value == null ? "" : String(value);
-      return el;
-    }
-    async function load() {
-      refresh.disabled = true;
-      count.textContent = "Loading…";
-      pagination.hidden = true;
-      status("Loading announcements…");
-      try {
-        const token = sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY);
-        if (!token) throw new Error("You are not signed in. Please log in again.");
-        const response = await fetch(API_URL, {headers: {Authorization: `Bearer ${token}`}});
-        if (response.status === 401 || response.status === 403) throw new Error("Your session is not authorized. Please sign in again.");
-        if (!response.ok) throw new Error(`Unable to load data (HTTP ${response.status}).`);
-        const payload = await response.json();
-        if (!Array.isArray(payload.list)) throw new Error("Unexpected API response: expected a list array.");
-        render(payload.list);
-      } catch (error) {
-        count.textContent = "Could not load announcements";
-        orderedAnnouncements = [];
-        pagination.hidden = true;
-        status(error instanceof Error ? error.message : "Something went wrong.");
-        console.error(error);
-      } finally {refresh.disabled = false;}
-    }
-    refresh.addEventListener("click", load);
-    previousPage.addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderPage();
-      }
-    });
-    nextPage.addEventListener("click", () => {
-      if (currentPage < Math.ceil(orderedAnnouncements.length / PAGE_SIZE)) {
-        currentPage++;
-        renderPage();
-      }
-    });
-    load();
-
-    function render(items) {
-      orderedAnnouncements = [...items].sort((a, b) =>
-        (validDate(b.sentDatetime)?.getTime() ?? 0) -
-        (validDate(a.sentDatetime)?.getTime() ?? 0)
-      );
-      currentPage = 1;
-      renderPage();
-    }
-
-    function renderPage() {
-      const total = orderedAnnouncements.length;
-      const totalPages = Math.ceil(total / PAGE_SIZE);
-      const start = (currentPage - 1) * PAGE_SIZE;
-      const visible = orderedAnnouncements.slice(start, start + PAGE_SIZE);
-
-      count.textContent = total
-        ? `Showing ${start + 1}–${start + visible.length} of ${total} announcements`
-        : "0 announcements";
-      list.replaceChildren();
-      pagination.hidden = totalPages <= 1;
-      pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-      previousPage.disabled = currentPage === 1;
-      nextPage.disabled = currentPage === totalPages;
-
-      if (!total) return status("No announcements available.");
-      for (const announcement of visible) {
-        const card = text("article", "", "item");
-        const meta = text("div", "", "meta");
-        meta.append(text("span", "Community announcement", "tag"));
-        const date = validDate(announcement.sentDatetime);
-        meta.append(text("time", date ? date.toLocaleString() : "Date unavailable"));
-        card.append(meta, text("p", announcement.content ?? ""));
-        list.append(card);
-      }
-    }
-  </script>
+  <script type="module" src="./js/pages/AnnouncementPage.js"></script>
+  <script src="./node_modules/axios/dist/axios.min.js"></script>
 </body>
+
 </html>

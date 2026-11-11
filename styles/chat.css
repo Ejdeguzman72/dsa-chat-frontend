@@ -1,0 +1,295 @@
+:root {
+    color-scheme: dark;
+    --bg: #0b1120;
+    --panel: #141e30;
+    --panel2: #1c2940;
+    --border: #2b3a54;
+    --text: #edf2ff;
+    --muted: #98a9c2;
+    --accent: #a5b4fc
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    background: radial-gradient(circle at 85% 5%, #25204c 0, transparent 35%), var(--bg);
+    color: var(--text);
+    font: 15px/1.6 system-ui, -apple-system, Segoe UI, sans-serif
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    min-height: 100vh
+}
+
+.sidebar {
+    background: #0e1728;
+    border-right: 1px solid var(--border);
+    padding: 30px 18px
+}
+
+.brand {
+    font-size: 21px;
+    font-weight: 800;
+    padding: 0 12px 32px
+}
+
+.brand span {
+    color: var(--accent)
+}
+
+.nav {
+    display: grid;
+    gap: 8px
+}
+
+.nav a {
+    padding: 11px 14px;
+    border-radius: 10px;
+    color: var(--muted)
+}
+
+.nav a:hover,
+.nav a.active {
+    background: #252c52;
+    color: #e6e9ff
+}
+
+.main {
+    width: 100%;
+    max-width: 1150px;
+    padding: 38px clamp(18px, 4vw, 54px);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 0
+}
+
+.topline {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase
+}
+
+h1 {
+    font-size: 32px;
+    margin: 7px 0 0
+}
+
+.intro {
+    color: var(--muted);
+    margin: 0 0 25px
+}
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 480px;
+    max-height: calc(100vh - 205px);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    overflow: hidden
+}
+
+.chat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border)
+}
+
+.chat-head strong {
+    font-size: 17px
+}
+
+.status {
+    font-size: 12px;
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.status:before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor
+}
+
+.status.online {
+    color: #6ee7b7
+}
+
+.messages {
+    flex: 1;
+    overflow: auto;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px
+}
+
+.empty {
+    text-align: center;
+    color: var(--muted);
+    margin: auto
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px
+}
+
+.avatar {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: #403a77;
+    color: #e4dcff;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 12px
+}
+
+.message.mine .avatar {
+    background: #244a83
+}
+
+.message-body {
+    min-width: 0
+}
+
+.meta {
+    display: flex;
+    align-items: baseline;
+    gap: 12px
+}
+
+.meta strong {
+    font-size: 13px
+}
+
+.meta time {
+    font-size: 11px;
+    color: var(--muted)
+}
+
+.message p {
+    margin: 4px 0 0;
+    color: #d2dbea;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere
+}
+
+.composer {
+    display: flex;
+    gap: 10px;
+    padding: 17px 20px;
+    border-top: 1px solid var(--border);
+    background: #101a2c
+}
+
+.composer input {
+    flex: 1;
+    min-width: 0;
+    background: #1c2940;
+    border: 1px solid #3a4866;
+    border-radius: 10px;
+    color: var(--text);
+    padding: 13px 15px;
+    font: inherit;
+    outline: none
+}
+
+.composer input:focus {
+    border-color: #9d87ff
+}
+
+.composer button,
+.reconnect {
+    background: #4338ca;
+    color: white;
+    border: 1px solid #6659de;
+    border-radius: 10px;
+    padding: 10px 17px;
+    font: inherit;
+    cursor: pointer
+}
+
+.composer button:disabled {
+    opacity: .45;
+    cursor: not-allowed
+}
+
+.reconnect {
+    font-size: 12px;
+    padding: 7px 10px
+}
+
+.hint {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 0 20px 14px;
+    background: #101a2c
+}
+
+@media(max-width:720px) {
+    .layout {
+        display: block
+    }
+
+    .sidebar {
+        padding: 14px 18px;
+        border-right: 0;
+        border-bottom: 1px solid var(--border)
+    }
+
+    .brand {
+        padding: 0 0 12px
+    }
+
+    .nav {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap
+    }
+
+    .nav a {
+        padding: 7px 11px
+    }
+
+    .main {
+        padding: 24px 14px;
+        min-height: calc(100vh - 100px)
+    }
+
+    .chat {
+        max-height: none;
+        min-height: 60vh
+    }
+
+    h1 {
+        font-size: 27px
+    }
+}
