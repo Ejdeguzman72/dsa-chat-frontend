@@ -1,33 +1,15 @@
 
 export class ChatPage {
 
-    private readonly websocketUrl =
-        "ws://localhost:8080/chat";
-
-    private readonly tokenKey =
-        "dsa_chat_access_token";
-
-    private readonly messages =
-        document.querySelector<HTMLElement>("#messages");
-
-    private readonly form =
-        document.querySelector<HTMLFormElement>("#message-form");
-
-    private readonly input =
-        document.querySelector<HTMLInputElement>("#message-input");
-
-    private readonly sendButton =
-        document.querySelector<HTMLButtonElement>("#send-button");
-
-    private readonly connectionStatus =
-        document.querySelector<HTMLElement>("#connection-status");
-
-    private readonly hint =
-        document.querySelector<HTMLElement>("#hint");
-
-    private readonly reconnectButton =
-        document.querySelector<HTMLButtonElement>("#reconnect");
-
+    private readonly websocketUrl = "ws://localhost:8080/chat";
+    private readonly tokenKey = "dsa_chat_access_token";
+    private readonly messages = document.querySelector<HTMLElement>("#messages");
+    private readonly form = document.querySelector<HTMLFormElement>("#message-form");
+    private readonly input = document.querySelector<HTMLInputElement>("#message-input");
+    private readonly sendButton = document.querySelector<HTMLButtonElement>("#send-button");
+    private readonly connectionStatus = document.querySelector<HTMLElement>("#connection-status");
+    private readonly hint = document.querySelector<HTMLElement>("#hint");
+    private readonly reconnectButton = document.querySelector<HTMLButtonElement>("#reconnect");
     private socket: WebSocket | null = null;
 
     constructor() {
