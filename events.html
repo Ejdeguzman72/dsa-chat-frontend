@@ -57,6 +57,245 @@
       </div>
     </main>
   </div>
+
+  <!-- Event Details Modal -->
+  <div id="event-modal" class="modal-overlay" hidden>
+    <div class="modal-content event-modal-content" role="dialog" aria-modal="true" aria-labelledby="event-modal-title"
+      aria-describedby="event-modal-description">
+      <div class="modal-header">
+        <h2 id="event-modal-title">
+          Event Details
+        </h2>
+
+        <button id="close-event-modal" class="modal-close" type="button" aria-label="Close event details">
+          &times;
+        </button>
+      </div>
+
+      <div class="event-modal-body">
+        <div class="event-modal-field">
+          <span class="event-modal-label">Event ID</span>
+          <p id="event-modal-id"></p>
+        </div>
+
+        <div class="event-modal-field">
+          <span class="event-modal-label">Date & Time</span>
+          <p id="event-modal-date"></p>
+        </div>
+
+        <div class="event-modal-field">
+          <span class="event-modal-label">Event Type</span>
+          <p id="event-modal-type"></p>
+        </div>
+
+        <div class="event-modal-field">
+          <span class="event-modal-label">Description</span>
+          <p id="event-modal-description"></p>
+        </div>
+
+        <div class="event-modal-actions">
+          <button id="update-event-btn" class="btn-update" type="button">
+            Update
+          </button>
+
+          <button id="delete-event-btn" class="btn-delete" type="button">
+            Delete
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+<!-- View Event Modal -->
+<div id="event-modal" class="modal-overlay" hidden>
+    <div
+        class="modal-content event-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="event-modal-title"
+        aria-describedby="event-modal-description"
+    >
+        <div class="modal-header">
+            <h2 id="event-modal-title">Event Details</h2>
+
+            <button
+                id="close-event-modal"
+                class="modal-close"
+                type="button"
+                aria-label="Close event details"
+            >
+                &times;
+            </button>
+        </div>
+
+        <div class="event-modal-body">
+            <div class="event-modal-field">
+                <span class="event-modal-label">Event ID</span>
+                <p id="event-modal-id"></p>
+            </div>
+
+            <div class="event-modal-field">
+                <span class="event-modal-label">Date & Time</span>
+                <p id="event-modal-date"></p>
+            </div>
+
+            <div class="event-modal-field">
+                <span class="event-modal-label">Event Type</span>
+                <p id="event-modal-type"></p>
+            </div>
+
+            <div class="event-modal-field">
+                <span class="event-modal-label">Description</span>
+                <p id="event-modal-description"></p>
+            </div>
+        </div>
+
+        <div class="event-modal-actions">
+            <button
+                id="update-event-btn"
+                class="btn-update"
+                type="button"
+            >
+                Update
+            </button>
+
+            <button
+                id="delete-event-btn"
+                class="btn-delete"
+                type="button"
+            >
+                Delete
+            </button>
+
+            <button
+                id="dismiss-event-modal"
+                class="btn-cancel"
+                type="button"
+            >
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Update Event Modal -->
+<div id="update-event-modal" class="modal-overlay" hidden>
+    <div
+        class="modal-content event-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="update-event-modal-title"
+    >
+        <div class="modal-header">
+            <h2 id="update-event-modal-title">
+                Update Event
+            </h2>
+
+            <button
+                id="close-update-event-modal"
+                class="modal-close"
+                type="button"
+                aria-label="Close update event"
+            >
+                &times;
+            </button>
+        </div>
+
+        <form id="update-event-form">
+            <div class="event-modal-body">
+
+                <div class="event-modal-field">
+                    <label
+                        class="event-modal-label"
+                        for="update-event-name"
+                    >
+                        Event Name
+                    </label>
+
+                    <input
+                        id="update-event-name"
+                        type="text"
+                        maxlength="150"
+                        required
+                    />
+                </div>
+
+                <div class="event-modal-field">
+                    <label
+                        class="event-modal-label"
+                        for="update-event-date"
+                    >
+                        Event Date
+                    </label>
+
+                    <input
+                        id="update-event-date"
+                        type="date"
+                        required
+                    />
+                </div>
+
+                <div class="event-modal-field">
+                    <label
+                        class="event-modal-label"
+                        for="update-event-type"
+                    >
+                        Event Type
+                    </label>
+
+                    <input
+                        id="update-event-type"
+                        type="text"
+                    />
+                </div>
+
+                <div class="event-modal-field">
+                    <label
+                        class="event-modal-label"
+                        for="update-event-description"
+                    >
+                        Description
+                    </label>
+
+                    <textarea
+                        id="update-event-description"
+                        rows="5"
+                    ></textarea>
+                </div>
+
+                <p
+                    id="update-event-error"
+                    class="form-error"
+                    role="alert"
+                    hidden
+                ></p>
+            </div>
+
+            <div class="event-modal-actions">
+                <button
+                    id="cancel-update-event"
+                    class="btn-cancel"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="save-update-event"
+                    class="btn-update"
+                    type="submit"
+                >
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
   <script type="module" src="./js/pages/EventPage.js"></script>
   <script src="./node_modules/axios/dist/axios.min.js"></script>
 </body>

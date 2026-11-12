@@ -1,27 +1,54 @@
 
-import {
-    EventService
-} from "../services/EventService.js";
+import { EventService } from "../services/EventService.js";
+import { EventModal } from "../modals/EventModal.js";
+import { UpdateEventModal } from "../modals/UpdateEventModal.js";
 
-import type {
-    Event
-} from "../models/Event.js";
+import type { Event } from "../models/Event.js";
 
 export class EventPage {
 
     private readonly service = new EventService();
-    private readonly container = document.querySelector<HTMLElement>("#content-list");
-    private readonly count = document.querySelector<HTMLElement>("#result-count");
-    private readonly refreshButton = document.querySelector<HTMLButtonElement>("#refresh");
-    private readonly pagination = document.querySelector<HTMLElement>("#events-pagination");
-    private readonly previousButton = document.querySelector<HTMLButtonElement>("#prev-events");
-    private readonly nextButton = document.querySelector<HTMLButtonElement>("#next-events");
-    private readonly pageInfo = document.querySelector<HTMLElement>("#events-page-info");
+
+    private readonly container =
+        document.querySelector<HTMLElement>("#content-list");
+
+    private readonly count =
+        document.querySelector<HTMLElement>("#result-count");
+
+    private readonly refreshButton =
+        document.querySelector<HTMLButtonElement>("#refresh");
+
+    private readonly pagination =
+        document.querySelector<HTMLElement>("#events-pagination");
+
+    private readonly previousButton =
+        document.querySelector<HTMLButtonElement>("#prev-events");
+
+    private readonly nextButton =
+        document.querySelector<HTMLButtonElement>("#next-events");
+
+    private readonly pageInfo =
+        document.querySelector<HTMLElement>("#events-page-info");
+
     private readonly pageSize = 4;
+
     private currentPage = 1;
     private upcomingEvents: Event[] = [];
 
+    private readonly eventModal: EventModal;
+    private readonly updateEventModal: UpdateEventModal;
+
     constructor() {
+
+        this.updateEventModal = new UpdateEventModal(
+            () => this.loadEvents()
+        );
+
+        this.eventModal = new EventModal(
+            () => this.loadEvents(),
+            event => this.updateEventModal.open(event)
+        );
+
         this.initializeEvents();
         void this.loadEvents();
     }
@@ -58,25 +85,20 @@ export class EventPage {
 
         if (!value) return null;
 
-        // Handle YYYY-MM-DD as a local calendar date.
         const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
 
-        const date = dateOnly
-            ? new Date(`${value}T00:00:00`)
-            : new Date(value);
+        const date = new Date(
+            dateOnly ? `${value}T00:00:00` : value
+        );
 
         return Number.isNaN(date.getTime()) ? null : date;
     }
 
     private getEventDate(event: Event): Date | null {
-
-        return this.validDate(
-            event.eventDate
-        );
+        return this.validDate(event.eventDate);
     }
 
     private getEventDateValue(event: Event): number {
-
         return this.getEventDate(event)?.getTime() ?? 0;
     }
 
@@ -116,7 +138,6 @@ export class EventPage {
                 );
 
             this.currentPage = 1;
-
             this.renderPage();
 
         } catch (error) {
@@ -140,7 +161,6 @@ export class EventPage {
             );
 
         } finally {
-
             if (this.refreshButton) {
                 this.refreshButton.disabled = false;
             }
@@ -161,11 +181,10 @@ export class EventPage {
         const start =
             (this.currentPage - 1) * this.pageSize;
 
-        const visibleEvents =
-            this.upcomingEvents.slice(
-                start,
-                start + this.pageSize
-            );
+        const visibleEvents = this.upcomingEvents.slice(
+            start,
+            start + this.pageSize
+        );
 
         this.container.replaceChildren();
 
@@ -210,7 +229,7 @@ export class EventPage {
         const date = this.getEventDate(event);
 
         const card = document.createElement("article");
-        card.className = "item event-row";
+        card.className = "item event-row clickable-event";
 
         const tile = document.createElement("div");
         tile.className = "date-tile";
@@ -241,8 +260,7 @@ export class EventPage {
 
         const dateText = document.createElement("span");
 
-        const rawDate =
-            event.eventDate;
+        const rawDate = event.eventDate;
 
         const isDateOnly =
             typeof rawDate === "string" &&
@@ -280,6 +298,28 @@ export class EventPage {
         }
 
         card.append(tile, details);
+
+        card.tabIndex = 0;
+        card.setAttribute("role", "button");
+
+        card.setAttribute(
+            "aria-label",
+            `View details for ${event.eventName}`
+        );
+
+        card.addEventListener("click", () => {
+            this.eventModal.open(event);
+        });
+
+        card.addEventListener("keydown", keyboardEvent => {
+            if (
+                keyboardEvent.key === "Enter" ||
+                keyboardEvent.key === " "
+            ) {
+                keyboardEvent.preventDefault();
+                this.eventModal.open(event);
+            }
+        });
 
         return card;
     }

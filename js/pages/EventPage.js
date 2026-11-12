@@ -1,4 +1,6 @@
 import { EventService } from "../services/EventService.js";
+import { EventModal } from "../modals/EventModal.js";
+import { UpdateEventModal } from "../modals/UpdateEventModal.js";
 export class EventPage {
     service = new EventService();
     container = document.querySelector("#content-list");
@@ -11,7 +13,11 @@ export class EventPage {
     pageSize = 4;
     currentPage = 1;
     upcomingEvents = [];
+    eventModal;
+    updateEventModal;
     constructor() {
+        this.updateEventModal = new UpdateEventModal(() => this.loadEvents());
+        this.eventModal = new EventModal(() => this.loadEvents(), event => this.updateEventModal.open(event));
         this.initializeEvents();
         void this.loadEvents();
     }
@@ -38,11 +44,8 @@ export class EventPage {
     validDate(value) {
         if (!value)
             return null;
-        // Handle YYYY-MM-DD as a local calendar date.
         const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
-        const date = dateOnly
-            ? new Date(`${value}T00:00:00`)
-            : new Date(value);
+        const date = new Date(dateOnly ? `${value}T00:00:00` : value);
         return Number.isNaN(date.getTime()) ? null : date;
     }
     getEventDate(event) {
@@ -135,7 +138,7 @@ export class EventPage {
     createEvent(event) {
         const date = this.getEventDate(event);
         const card = document.createElement("article");
-        card.className = "item event-row";
+        card.className = "item event-row clickable-event";
         const tile = document.createElement("div");
         tile.className = "date-tile";
         const day = document.createElement("strong");
@@ -187,6 +190,19 @@ export class EventPage {
             details.append(description);
         }
         card.append(tile, details);
+        card.tabIndex = 0;
+        card.setAttribute("role", "button");
+        card.setAttribute("aria-label", `View details for ${event.eventName}`);
+        card.addEventListener("click", () => {
+            this.eventModal.open(event);
+        });
+        card.addEventListener("keydown", keyboardEvent => {
+            if (keyboardEvent.key === "Enter" ||
+                keyboardEvent.key === " ") {
+                keyboardEvent.preventDefault();
+                this.eventModal.open(event);
+            }
+        });
         return card;
     }
     showStatus(message) {

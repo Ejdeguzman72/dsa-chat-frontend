@@ -131,12 +131,6 @@ export class UpdateAnnouncementModal {
             this.submitButton.disabled = false;
             this.submitButton.textContent = "Save Changes";
         }
-
-        try {
-            await this.onUpdated();
-        } catch (error) {
-            console.error("Announcement updated but refresh failed:", error);
-        }
     }
 
     private showError(message: string): void {
