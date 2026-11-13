@@ -1,64 +1,171 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width,initial-scale=1" name="viewport" />
-  <title>General Chat · DSA Chat</title>
-  <link rel="stylesheet" href="styles/sidebar.css">
-  <link rel="stylesheet" href="styles/chat.css">
-  <style>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
 
-  </style>
+    <title>General Chat · DSA Chat</title>
+
+    <link rel="stylesheet" href="styles/sidebar.css" />
+    <link rel="stylesheet" href="styles/chat.css" />
 </head>
 
 <body>
-  <div class="layout">
-    <aside aria-label="Main navigation" class="sidebar"><a class="brand" href="dashboard.html"><span
-          class="logo">▤</span><span>DSA<span class="accent">Chat</span></span></a>
-      <div class="workspace">
-        <div class="workspace-icon">D</div>
-        <div><strong>DSA Community</strong><small>Community workspace</small></div><span class="chevron">⌄</span>
-      </div>
-      <div class="section-label">WORKSPACE</div>
-      <nav><a class="nav-link" href="dashboard.html"><span>▦</span> Overview</a><a class="nav-link"
-          href="announcements.html"><span>📢</span> Announcements</a><a class="nav-link"
-          href="events.html"><span>📅</span> Events</a><a aria-current="page" class="nav-link active"
-          href="chat.html"><span>💬</span> General chat</a></nav>
-      <div class="section-label section-spaced">COMING SOON</div>
-      <div class="nav-link disabled"><span>♧</span> Direct messages <span class="soon">Soon</span></div>
-      <div class="nav-link disabled"><span>⚙</span> Settings <span class="soon">Soon</span></div>
-      <div class="sidebar-bottom">
-        <div class="online"><span class="green-dot"></span> Community online</div>
-        <div class="profile"><span class="avatar me">ME</span>
-          <div><strong>Demo User</strong><small>Member</small></div><span class="profile-dots">•••</span>
-        </div><a class="sign-out" href="index.html">← Back to login</a>
-      </div>
-    </aside>
-    <main class="main">
-      <div class="topline">DSA Community</div>
-      <h1>General chat</h1>
-      <p class="intro">Connect with the community in real time.</p>
-      <section aria-label="General chat room" class="chat">
-        <header class="chat-head"><strong># general</strong>
-          <div style="display:flex;align-items:center;gap:12px"><span class="status" id="connection-status"
-              role="status">Connecting</span><button class="reconnect" id="reconnect" type="button">Reconnect</button>
-          </div>
-        </header>
-        <div aria-live="polite" aria-relevant="additions" class="messages" id="messages" role="log">
-          <p class="empty" id="empty">Messages will appear here when connected.</p>
-        </div>
-        <form class="composer" id="message-form"><label for="message-input"
-            style="position:absolute;left:-10000px">Message</label><input autocomplete="off" disabled=""
-            id="message-input" maxlength="2000" placeholder="Message #general or ask @AI…" required="" /><button
-            disabled="" id="send-button" type="submit">Send ➤</button></form>
-        <div class="hint" id="hint">Connect to your Spring Boot WebSocket server to start chatting.</div>
-      </section>
-    </main>
-  </div>
-  <script type="module" src="./js/pages/ChatPage.js"></script>
-  <script src="./node_modules/axios/dist/axios.min.js"></script>
-</body>
+    <div class="layout">
 
+        <aside aria-label="Main navigation" class="sidebar">
+
+            <a class="brand" href="dashboard.html">
+                <span class="logo">▤</span>
+                <span>DSA<span class="accent">Chat</span></span>
+            </a>
+
+            <div class="workspace">
+                <div class="workspace-icon">D</div>
+                <div>
+                    <strong>DSA Community</strong>
+                    <small>Community workspace</small>
+                </div>
+                <span class="chevron">⌄</span>
+            </div>
+
+            <div class="section-label">WORKSPACE</div>
+
+            <nav>
+                <a class="nav-link" href="dashboard.html">
+                    <span>▦</span> Overview
+                </a>
+
+                <a class="nav-link"
+                   href="announcements.html">
+                    <span>📢</span> Announcements
+                </a>
+
+                <a class="nav-link" href="events.html">
+                    <span>📅</span> Events
+                </a>
+
+                <a class="nav-link active"
+                   href="chat.html"
+                   aria-current="page">
+                    <span>💬</span> General chat
+                </a>
+            </nav>
+
+            <div class="section-label section-spaced">
+                COMING SOON
+            </div>
+
+            <div class="nav-link disabled">
+                <span>♧</span> Direct messages
+                <span class="soon">Soon</span>
+            </div>
+
+            <div class="nav-link disabled">
+                <span>⚙</span> Settings
+                <span class="soon">Soon</span>
+            </div>
+
+            <div class="sidebar-bottom">
+
+                <div class="online">
+                    <span class="green-dot"></span>
+                    Community online
+                </div>
+
+                <div class="profile">
+                    <span class="avatar me">ME</span>
+                    <div>
+                        <strong>Demo User</strong>
+                        <small>Member</small>
+                    </div>
+                    <span class="profile-dots">•••</span>
+                </div>
+
+                <a class="sign-out" href="index.html">
+                    ← Back to login
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+
+            <div class="topline">DSA Community</div>
+
+            <h1>General chat</h1>
+
+            <p class="intro">
+                Connect with the community in real time.
+            </p>
+
+            <section class="chat"
+                     aria-label="General chat room">
+
+                <header class="chat-head">
+                    <strong># general</strong>
+
+                    <div class="chat-actions">
+                        <span id="connection-status"
+                              class="status"
+                              role="status">
+                            Connecting
+                        </span>
+
+                        <button id="reconnect"
+                                class="reconnect"
+                                type="button">
+                            Reconnect
+                        </button>
+                    </div>
+                </header>
+
+                <div id="messages"
+                     class="messages"
+                     role="log"
+                     aria-label="Chat messages"
+                     aria-live="polite"
+                     aria-relevant="additions">
+
+                    <p id="empty" class="empty">
+                        Loading chat history...
+                    </p>
+                </div>
+
+                <form id="message-form"
+                      class="composer">
+
+                    <label for="message-input"
+                           class="visually-hidden">
+                        Message
+                    </label>
+
+                    <input id="message-input"
+                           type="text"
+                           autocomplete="off"
+                           maxlength="2000"
+                           placeholder="Message #general or ask @AI…"
+                           required
+                           disabled />
+
+                    <button id="send-button"
+                            type="submit"
+                            disabled>
+                        Send ➤
+                    </button>
+                </form>
+
+                <div id="hint" class="hint">
+                    Connecting to your Spring Boot server...
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <script type="module" src="./js/pages/ChatPage.js"></script>
+</body>
 </html>
