@@ -1,72 +1,36 @@
 
-import type { ChatMessageDto } from "../models/ChatMessageDto.js";
-import type { ChatMessageDTOListResponse } from "../models/ChatMessageDTOListResponse.js";
 
-declare const axios: {
-    create(config: {
-        baseURL: string;
-        timeout: number;
-    }): {
-        get<T>(
-            url: string,
-            config?: {
-                headers?: Record<string, string>;
-                params?: Record<string, number>;
-            }
-        ): Promise<{ data: T }>;
-    };
-};
+import type { AxiosStatic, AxiosInstance, AxiosResponse } from "axios";
+import { ChatMessageListResponse } from "../models/ChatMessageListResponse";
+import { ChatMessage } from "../models/ChatMessage.js";
+import { ChatMessageDTOListResponse } from "../models/ChatMessageDTOListResponse";
+
+declare const axios: AxiosStatic;
 
 export class MessageService {
-
-    private readonly api = axios.create({
-        baseURL: "http://localhost:8080",
-        timeout: 10000
-    });
-
+    private readonly baseUrl = "http://localhost:8080";
     private readonly tokenKey = "dsa_chat_access_token";
-
-    public getToken(): string | null {
-        return (
-            sessionStorage.getItem(this.tokenKey) ??
-            localStorage.getItem(this.tokenKey)
-        );
-    }
-
-    public async getChatHistory(
-        limit = 50
-    ): Promise<ChatMessageDto[]> {
-
-        if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
-            throw new Error("History limit must be between 1 and 100");
-        }
-
-        const token = this.getToken();
-
-        if (!token) {
-            throw new Error("Authentication token not found");
-        }
-
-        const response = await this.api.get<
-            ChatMessageDto[] | ChatMessageDTOListResponse
-        >("/chat/all/dto", {
+    
+    public async getAllMessages(): Promise<ChatMessageListResponse> {
+        const token = sessionStorage.getItem("dsa_chat_access_token");
+        const response = await axios.get(`${this.baseUrl}/chat/all`, {
             headers: {
                 Authorization: `Bearer ${token}`
-            },
-            params: { limit }
+            }
         });
+        console.log(response.data);
+        return response.data;
+    }
 
-        if (Array.isArray(response.data)) {
-            return response.data;
-        }
+    public async getAllMessageDTOs(): Promise<ChatMessageDTOListResponse> {
+        const token = sessionStorage.getItem("dsa_chat_access_token");
+        const response = await axios.get(`${this.baseUrl}/chat/all/dto`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
 
-        if (
-            response.data &&
-            Array.isArray(response.data.list)
-        ) {
-            return response.data.list;
-        }
-
-        throw new Error("Unexpected chat history response");
+        console.log(response.data);
+        return response.data;
     }
 }

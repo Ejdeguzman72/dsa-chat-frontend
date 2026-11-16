@@ -1,6 +1,9 @@
+import { MessageService } from "../services/MessageService.js";
+import { ChatMessageDTOListResponse } from "../models/ChatMessageDTOListResponse.js";
+import { ChatMessageDto } from "../models/ChatMessageDto.js";
 
 export class ChatPage {
-
+    private messageService = new MessageService();
     private readonly websocketUrl = "ws://localhost:8080/chat";
     private readonly tokenKey = "dsa_chat_access_token";
     private readonly messages = document.querySelector<HTMLElement>("#messages");
@@ -18,7 +21,9 @@ export class ChatPage {
     }
 
     private initializeEvents(): void {
-
+        const data = this.messageService.getAllMessageDTOs();
+        console.log(data);
+        this.loadAllMessages();
         this.form?.addEventListener("submit", event => {
             event.preventDefault();
             this.sendMessage();
@@ -264,7 +269,65 @@ export class ChatPage {
         this.messages.scrollTop =
             this.messages.scrollHeight;
     }
+
+private async loadAllMessages(): Promise<void> {
+    try {
+        const response: ChatMessageDTOListResponse =
+            await this.messageService.getAllMessageDTOs();
+
+        // if (!response.success) {
+        //     throw new Error("Failed to retrieve messages");
+        // }
+
+        const messages: ChatMessageDto[] = response.list;
+
+        const container = document.getElementById("messages");
+
+        if (!container) {
+            throw new Error("Messages container not found");
+        }
+
+        container.querySelectorAll(".chat-message")
+            .forEach(element => element.remove());
+
+        const sortedMessages = [...messages].sort((a, b) =>
+            (a.sentDatetime ?? "").localeCompare(
+                b.sentDatetime ?? ""
+            ) || a.chatMessageId - b.chatMessageId
+        );
+
+        for (const message of sortedMessages) {
+            const article = document.createElement("article");
+            article.className = "chat-message";
+
+            const username = document.createElement("strong");
+            username.className = "chat-message-username";
+            username.textContent = `${message.username}`;
+
+            const content = document.createElement("p");
+            content.className = "chat-message-content";
+            content.textContent = message.content;
+
+            article.append(username, content);
+            container.appendChild(article);
+        }
+
+        const empty = document.getElementById("empty");
+
+        if (empty) {
+            empty.hidden = sortedMessages.length > 0;
+        }
+
+        container.scrollTop = container.scrollHeight;
+
+    } catch (error) {
+        console.error("Failed to load messages:", error);
+    }
 }
+
+}
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
     new ChatPage();
